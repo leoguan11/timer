@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>辩论计时器</title>
+</head>
+<body>
+    <button onclick="startTimer()">开始计时</button>
+    <h1 id="stageName"></h1>
+    <h2 id="timeLeft"></h2>
+    <audio id="alertSound" src="http://soundbible.com/mp3/A-Tone-His_Self-1266414414.mp3"></audio>
+    <script>
+        var debateStages = [
+            {name: "陈词阶段", minutes: 10},
+            {name: "攻辩阶段", minutes: 21},
+            {name: "自由辩论阶段", minutes: 16},
+            {name: "总结陈词阶段", minutes: 4},
+            {name: "第三方点评", minutes: 5}
+        ];
+        var currentStage = 0;
+        var secondsLeft = debateStages[currentStage].minutes * 60;
+        var alertSound = document.getElementById("alertSound");
+        var intervalId;
+
+        function updateDisplay() {
+            document.getElementById("stageName").textContent = debateStages[currentStage].name;
+            document.getElementById("timeLeft").textContent = secondsLeft + " 秒剩余";
+        }
+
+        function timer() {
+            updateDisplay();
+            if (secondsLeft === 30) {
+                alertSound.play();
+            }
+            if (secondsLeft === 0) {
+                currentStage++;
+                if (currentStage < debateStages.length) {
+                    secondsLeft = debateStages[currentStage].minutes * 60;
+                } else {
+                    clearInterval(intervalId);
+                    document.getElementById("stageName").textContent = "辩论结束";
+                }
+            } else {
+                secondsLeft--;
+            }
+        }
+
+        function startTimer() {
+            intervalId = setInterval(timer, 1000);
+        }
+    </script>
+</body>
+</html>
